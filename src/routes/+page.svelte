@@ -35,12 +35,17 @@
     });
 
     function generatePassword() {
+
+        if ($store_length <= 6 || $store_length >= 999) {
+            return toast('❌ Character limit is between 6 and 999 characters');
+        }
+
         finalPassword = "";
 
         modifiers.letters.enabled = $store_letters;
         modifiers.numbers.enabled = $store_numbers;
         modifiers.symbols.enabled = $store_symbols;
-        
+
         function getRandomToken() {
             let choices = Object.entries(modifiers)
             let randomToken = "";
@@ -63,6 +68,8 @@
         for (let index = 0; index < $store_length; index++) {
             finalPassword = `${finalPassword}${getRandomToken()}`;
         }
+
+        toast('✅ Password is in your clipboard!');
     }
 
     function copyPassword() {
@@ -70,7 +77,6 @@
         copyText.select();
         copyText.setSelectionRange(0, 99999);
         navigator.clipboard.writeText(copyText.value);
-        toast('✅ Password is in your clipboard!');
     }
 </script>
 
@@ -78,7 +84,9 @@
     <Toaster />
     <div class="main__restrict">
         <button class="main__password" on:click={() => copyPassword() }>
-            <span>{finalPassword}</span>
+            <div class="password__preview">
+                <nobr>{finalPassword}</nobr>
+            </div>
             <img src={assets.copy} alt="Copy">
             <input type="text" value={finalPassword} readonly id="password">
         </button>
@@ -95,7 +103,7 @@
                 <label for="symbols">symbols</label>
             </div>
             <div class="charachter__input">
-                <input class="characters" type="number" min="6" bind:value={$store_length}>
+                <input class="characters" type="number" min="6" max="999" bind:value={$store_length}>
             </div>
         </div>
     </div>
@@ -125,6 +133,7 @@
 
             .main__password {
                 width: 100%;
+                max-height: 40px;
                 text-align: center;
                 color: white;
                 background-color: rgb(24, 24, 24);
@@ -159,7 +168,7 @@
                     display: none;
                 }
 
-                span {
+                .password__preview {
                     text-overflow: ellipsis;
                     overflow: hidden;
                 }
