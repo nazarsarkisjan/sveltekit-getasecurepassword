@@ -47,7 +47,6 @@
             let collection = [];
             
             choices.forEach(e => {
-                console.log(e);
                 if (e[1].enabled) {
                     e[1].values.forEach(e => {
                         collection = collection.concat(e);
