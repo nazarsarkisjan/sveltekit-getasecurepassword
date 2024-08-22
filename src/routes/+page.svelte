@@ -36,7 +36,7 @@
 
     function generatePassword() {
 
-        if ($store_length <= 6 || $store_length >= 999) {
+        if ($store_length < 6 || $store_length > 999) {
             return toast('❌ Character limit is between 6 and 999 characters');
         }
 
