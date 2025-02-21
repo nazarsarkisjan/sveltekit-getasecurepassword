@@ -3,13 +3,13 @@ import adapter from '@sveltejs/adapter-auto';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	kit: {
-		adapter: adapter(),
+    kit: {
+        adapter: adapter(),
 
-		alias: {
-			"$lib": "src/lib"
-		}
-	},
+        alias: {
+            "$lib": "src/lib"
+        }
+    },
 
     preprocess: [vitePreprocess({})],
 };

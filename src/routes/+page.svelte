@@ -21,7 +21,7 @@
         },
         symbols: {
             "alias": "Symbols",
-            "values": `!@#$%^&*();:'"\|.,`.split(""),
+            "values": `!@#$%&`.split(""),
             "enabled": $store_symbols,
         }
     }
@@ -35,41 +35,44 @@
     });
 
     function generatePassword() {
-
-        if ($store_length < 6 || $store_length > 999) {
-            return toast('❌ Character limit is between 6 and 999 characters');
+        if ($store_length < 6 || $store_length > 128) {
+            return toast('❌ Character limit is between 6 and 128 characters');
         }
-
-        finalPassword = "";
-
+        
         modifiers.letters.enabled = $store_letters;
         modifiers.numbers.enabled = $store_numbers;
         modifiers.symbols.enabled = $store_symbols;
-
-        function getRandomToken() {
-            let choices = Object.entries(modifiers)
-            let randomToken = "";
-            let collection = [];
-            
-            choices.forEach(e => {
-                if (e[1].enabled) {
-                    e[1].values.forEach(e => {
-                        collection = collection.concat(e);
-                    });
-                }
-            });
-
-            let random = Math.floor(Math.random() * collection.length);
-            randomToken = collection[random];
-
-            return randomToken;
-        }
-
-        for (let index = 0; index < $store_length; index++) {
-            finalPassword = `${finalPassword}${getRandomToken()}`;
-        }
-
+        
+        finalPassword = getRandomToken($store_length);
         toast('✅ Password is in your clipboard!');
+    }
+
+    function getRandomToken(length) {
+        let choices = Object.entries(modifiers)
+        let collection = [];
+
+        choices.forEach(e => {
+            if (e[1].enabled) {
+                e[1].values.forEach(e => {
+                    collection = collection.concat(e);
+                });
+            }
+        });
+        
+        return createRandomStringFromArray(collection, length);
+    }
+
+    function createRandomStringFromArray(array) {
+        const randomValues = new Uint8Array($store_length);
+        window.crypto.getRandomValues(randomValues);
+
+        let randomString = '';
+        for (let i = 0; i < $store_length; i++) {
+            const randomIndex = randomValues[i] % array.length;
+            randomString += array[randomIndex];
+        }
+
+        return randomString;
     }
 
     function copyPassword() {
