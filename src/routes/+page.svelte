@@ -35,7 +35,7 @@
     });
 
     function generatePassword() {
-        if ($store_length < 6 || $store_length > 128) {
+        if ($store_length < 8 || $store_length > 128) {
             return toast("❌ Character limit is between 6 and 128 characters");
         }
 
@@ -105,16 +105,31 @@
         >
 
         <div class="main__characters">
-            <div>
-                <input type="checkbox" name="numbers" id="numbers" bind:checked={$store_numbers} />
-                <label for="numbers">numbers</label>
+            <div class="space">
+                <div>
+                    <input type="checkbox" name="numbers" id="numbers" bind:checked={$store_numbers} />
+                    <label for="numbers">numbers</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="symbols" id="symbols" bind:checked={$store_symbols} />
+                    <label for="symbols">symbols</label>
+                </div>
             </div>
-            <div>
-                <input type="checkbox" name="symbols" id="symbols" bind:checked={$store_symbols} />
-                <label for="symbols">symbols</label>
-            </div>
-            <div class="charachter__input">
+
+            <!-- <div class="charachter__input">
                 <input class="characters" type="number" min="6" max="999" bind:value={$store_length} />
+            </div> -->
+
+            <div class="charachter__input">
+                <input
+                    class="characters"
+                    type="range"
+                    min="8"
+                    max="128"
+                    bind:value={$store_length}
+                    oninput="this.nextElementSibling.value = this.value"
+                />
+                <output>24</output>
             </div>
         </div>
     </div>
@@ -205,13 +220,20 @@
 
             .main__characters {
                 display: flex;
-                justify-content: space-between;
+                flex-direction: column;
+                gap: 8px;
+
+                .space {
+                    display: flex;
+                    align-items: center;
+                    gap: 16px;
+                }
 
                 div {
+                    width: 100%;
                     display: flex;
-                    justify-content: center;
                     align-items: center;
-                    gap: 2px;
+                    gap: 4px;
 
                     text-transform: capitalize;
 
@@ -222,10 +244,8 @@
 
                 .charachter__input {
                     .characters {
-                        max-width: 70px;
                         width: 100%;
                         height: 25px;
-                        padding: 6px;
                         border-radius: 5px;
 
                         display: flex;
@@ -234,6 +254,12 @@
                         background-color: rgb(32, 32, 32);
                         color: white;
                         border: none;
+                    }
+
+                    output {
+                        width: 32px;
+                        text-align: center;
+                        color: white;
                     }
                 }
             }
