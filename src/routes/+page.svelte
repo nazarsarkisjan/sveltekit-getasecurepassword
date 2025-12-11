@@ -1,8 +1,8 @@
 <script>
-    import { store_letters, store_numbers, store_symbols, store_length } from '$lib/stores.js';
-    import { Toaster, toast } from 'svelte-sonner';
-    import { onMount } from 'svelte';
-    import { assets } from '$lib';
+    import { store_letters, store_numbers, store_symbols, store_length } from "$lib/stores.js";
+    import { Toaster, toast } from "svelte-sonner";
+    import { onMount } from "svelte";
+    import { assets } from "$lib";
 
     import "../app.scss";
 
@@ -10,21 +10,21 @@
 
     const modifiers = {
         letters: {
-            "alias": "Letters",
-            "values": "abcdefghijklmopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUWVXYZ".split(""),
-            "enabled": $store_letters,
+            alias: "Letters",
+            values: "abcdefghijklmopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUWVXYZ".split(""),
+            enabled: $store_letters,
         },
         numbers: {
-            "alias": "Numbers",
-            "values": "1234567890".split(""),
-            "enabled": $store_numbers,
+            alias: "Numbers",
+            values: "1234567890".split(""),
+            enabled: $store_numbers,
         },
         symbols: {
-            "alias": "Symbols",
-            "values": `!@#$%&`.split(""),
-            "enabled": $store_symbols,
-        }
-    }
+            alias: "Symbols",
+            values: `!@#$%&`.split(""),
+            enabled: $store_symbols,
+        },
+    };
 
     onMount(async () => {
         generatePassword();
@@ -36,29 +36,29 @@
 
     function generatePassword() {
         if ($store_length < 6 || $store_length > 128) {
-            return toast('❌ Character limit is between 6 and 128 characters');
+            return toast("❌ Character limit is between 6 and 128 characters");
         }
-        
+
         modifiers.letters.enabled = $store_letters;
         modifiers.numbers.enabled = $store_numbers;
         modifiers.symbols.enabled = $store_symbols;
-        
+
         finalPassword = getRandomToken($store_length);
-        toast('✅ Password is in your clipboard!');
+        toast("✅ Password is in your clipboard!");
     }
 
     function getRandomToken(length) {
-        let choices = Object.entries(modifiers)
+        let choices = Object.entries(modifiers);
         let collection = [];
 
-        choices.forEach(e => {
+        choices.forEach((e) => {
             if (e[1].enabled) {
-                e[1].values.forEach(e => {
+                e[1].values.forEach((e) => {
                     collection = collection.concat(e);
                 });
             }
         });
-        
+
         return createRandomStringFromArray(collection, length);
     }
 
@@ -66,7 +66,7 @@
         const randomValues = new Uint8Array($store_length);
         window.crypto.getRandomValues(randomValues);
 
-        let randomString = '';
+        let randomString = "";
         for (let i = 0; i < $store_length; i++) {
             const randomIndex = randomValues[i] % array.length;
             randomString += array[randomIndex];
@@ -86,32 +86,39 @@
 <div class="main">
     <Toaster />
     <div class="main__restrict">
-        <button class="main__password" on:click={() => copyPassword() }>
+        <button class="main__password" on:click={() => copyPassword()}>
             <div class="password__preview">
                 <nobr>{finalPassword}</nobr>
             </div>
-            <img src={assets.copy} alt="Copy">
-            <input type="text" value={finalPassword} readonly id="password">
+            <img src={assets.copy} alt="Copy" />
+            <input type="text" value={finalPassword} readonly id="password" />
         </button>
-    
-        <button class="main__generate" on:click={() => { generatePassword(); setTimeout(() => { copyPassword() }, 5); }}>Generate</button>
-    
+
+        <button
+            class="main__generate"
+            on:click={() => {
+                generatePassword();
+                setTimeout(() => {
+                    copyPassword();
+                }, 5);
+            }}>Generate</button
+        >
+
         <div class="main__characters">
             <div>
-                <input type="checkbox" name="numbers" id="numbers" bind:checked={$store_numbers}>
+                <input type="checkbox" name="numbers" id="numbers" bind:checked={$store_numbers} />
                 <label for="numbers">numbers</label>
             </div>
             <div>
-                <input type="checkbox" name="symbols" id="symbols" bind:checked={$store_symbols}>
+                <input type="checkbox" name="symbols" id="symbols" bind:checked={$store_symbols} />
                 <label for="symbols">symbols</label>
             </div>
             <div class="charachter__input">
-                <input class="characters" type="number" min="6" max="999" bind:value={$store_length}>
+                <input class="characters" type="number" min="6" max="999" bind:value={$store_length} />
             </div>
         </div>
     </div>
 </div>
-
 
 <style lang="scss">
     .main {
@@ -152,7 +159,7 @@
                 display: flex;
                 justify-content: space-between;
                 gap: 10px;
-               
+
                 cursor: pointer;
 
                 transition: all 50ms;
@@ -176,7 +183,7 @@
                     overflow: hidden;
                 }
             }
-    
+
             .main__generate {
                 color: white;
                 text-transform: capitalize;
@@ -195,7 +202,7 @@
                     transform: scale(0.99);
                 }
             }
-    
+
             .main__characters {
                 display: flex;
                 justify-content: space-between;
@@ -220,7 +227,7 @@
                         height: 25px;
                         padding: 6px;
                         border-radius: 5px;
-                        
+
                         display: flex;
                         justify-content: center;
                         box-sizing: border-box;
